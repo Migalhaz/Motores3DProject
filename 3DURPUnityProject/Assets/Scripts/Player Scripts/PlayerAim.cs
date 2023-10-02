@@ -1,14 +1,21 @@
+using Game.Item;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Game.Player
 {
     [RequireComponent(typeof(PlayerAnimatorController))]
+    [RequireComponent(typeof(PlayerInventory))]
     public class PlayerAim : MonoBehaviour
     {
+        [Header("Components")]
         [SerializeField] PlayerAnimatorController m_playerAnimatorController;
+        [SerializeField] PlayerInventory m_inventory;
+
+        [Header("Gun Settings")]
         [SerializeField, Range(0f, 1)] float m_fireRate;
 
         [SerializeField] UnityEvent m_aimingEvent;
@@ -68,7 +75,18 @@ namespace Game.Player
 
         public void Reload()
         {
+            if (m_currentAmmo >= m_maxAmmo) return;
+            List<AbstractItem> itens = m_inventory.m_CurrentItens;
+            List<AbstractItem>  ammoBoxes = itens.FindAll(x => x is AmmoBox);
+            if (ammoBoxes.Count <= 0) return;
 
+            AmmoBox currentAmmoBox = (AmmoBox)ammoBoxes.First();
+            m_currentAmmo += currentAmmoBox.m_AmmoValue;
+            if (m_currentAmmo >= m_maxAmmo)
+            {
+                m_currentAmmo = m_maxAmmo;
+            }
+            m_inventory.RemoveItem(currentAmmoBox);
         }
     }
 }

@@ -12,15 +12,25 @@ namespace Game.Player
         Vector2 m_moveInputs;
         public Vector2 m_MoveInputs => m_moveInputs;
 
+        [Header("Interact Settings")]
+        [SerializeField] KeyCode m_interactKeyCode = KeyCode.E;
+        public UnityEvent m_InteractEvent;
+
         [Header("Aim Settings")]
         [SerializeField] UnityEvent m_mouseRightButtonPressed;
         [SerializeField] UnityEvent m_mouseRightButtonReleased;
         [SerializeField] UnityEvent m_mouseLeftButtonPressed;
 
+        [Header("Reload Settings")]
+        [SerializeField] KeyCode m_reloadKeycode = KeyCode.R;
+        [SerializeField] UnityEvent m_reloadEvent;
+
         private void Update()
         {
             MoveInput();
             AimInput();
+            ReloadInput();
+            InteractInput();
         }
 
         void MoveInput()
@@ -28,6 +38,22 @@ namespace Game.Player
             float x = Input.GetAxis("Horizontal");
             float y = Input.GetAxis("Vertical");
             m_moveInputs.Set(x, y);
+        }
+
+        void ReloadInput()
+        {
+            if (Input.GetKeyDown(m_reloadKeycode))
+            {
+                m_reloadEvent?.Invoke();
+            }
+        }
+
+        void InteractInput()
+        {
+            if (Input.GetKeyDown(m_interactKeyCode))
+            {
+                m_InteractEvent?.Invoke();
+            }
         }
 
         void AimInput()

@@ -15,18 +15,20 @@ namespace Game.Player
         public List<AbstractItem> m_CurrentItens => m_currentItens;
         public int m_Money => m_money;
 
-        public void AddItem(AbstractItem _newItem)
+        public bool AddItem(AbstractItem _newItem)
         {
-            if (m_currentInventorySpace >= m_maxInventorySpace) return;
+            if (m_currentInventorySpace >= m_maxInventorySpace) return false;
             m_currentItens.Add(_newItem);
             m_currentInventorySpace += _newItem.m_ItemSpace;
+            return true;
         }
 
-        public void RemoveItem(AbstractItem _newItem)
+        public bool RemoveItem(AbstractItem _newItem)
         {
-            if (!m_currentItens.Contains(_newItem)) return;
+            if (!m_currentItens.Contains(_newItem)) return false;
             m_currentItens.Remove(_newItem);
             m_currentInventorySpace -= _newItem.m_ItemSpace;
+            return true;
         }
 
         public void AddMoney(int _value)
