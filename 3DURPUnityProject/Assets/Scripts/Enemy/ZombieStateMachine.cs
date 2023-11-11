@@ -10,6 +10,7 @@ public class ZombieStateMachine : AbstractStateMachineController
     [SerializeField] StateZombieChasing m_zombieChasingState;
     [SerializeField] StateZombieAttack m_zombieAttackState;
     [SerializeField] StateZombieDie m_zombieDieState;
+    [SerializeField] StateZombiePatrol m_zombiePatrolState;
 
     [Header("Raycast Settings")]
     [SerializeField] Vector3 m_raycastOffset;
@@ -19,9 +20,11 @@ public class ZombieStateMachine : AbstractStateMachineController
     public StateZombieChasing m_ZombieChasingState => m_zombieChasingState;
     public StateZombieAttack m_ZombieAttackState => m_zombieAttackState;
     public StateZombieDie m_ZombieDieState => m_zombieDieState;
+    public StateZombiePatrol m_ZombiePatrolState => m_zombiePatrolState;
+
     private void Start()
     {
-        ForceSwitchState(m_zombieChasingState);
+        ForceSwitchState(m_zombiePatrolState);
     }
 
     public bool PlayerInFront()

@@ -1,7 +1,85 @@
+using Game.GameSystem;
 using Game.Player;
 using MigalhaSystem.StateMachine;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
+[System.Serializable]
+public class StateZombiePatrol : AbstractState
+{
+    [SerializeField] Animator m_animator;
+    [SerializeField] string m_idleTag;
+    [SerializeField] string m_walkTag;
+    [SerializeField] float m_transitionDuration = .1f;
+
+
+    [SerializeField] NavMeshAgent m_navmesh;
+    List<Transform> m_waypoints;
+    Transform m_currentWaypoint;
+
+    [SerializeField] float m_timerToWait;
+    float m_currentTimer;
+
+    [SerializeField] float m_distanceToChasePlayer = 50;
+
+    public override void EnterState(AbstractStateMachineController stateMachineController)
+    {
+        base.EnterState(stateMachineController);
+        m_waypoints = GameManager.Instance.m_waypoints;
+        SetWaypoint();
+        m_currentTimer = 0;
+        m_animator.CrossFade(m_walkTag, m_transitionDuration);
+    }
+
+    public override void UpdateState(AbstractStateMachineController stateMachineController)
+    {
+        base.UpdateState(stateMachineController);
+
+        ZombieStateMachine zombieStateMachine = (ZombieStateMachine)stateMachineController;
+
+        Vector3 waypointPos = m_currentWaypoint.position;
+        waypointPos.y = 0;
+
+        Vector3 zombiePos = stateMachineController.transform.position;
+        zombiePos.y = 0;
+
+        Vector3 playerPos = PlayerManager.Instance.transform.position;
+        playerPos.y = 0;
+
+        float distanceFromWaypoint = Vector3.Distance(waypointPos, zombiePos);
+        if (distanceFromWaypoint <= 3)
+        {
+            Debug.Log("wait timer");
+            m_navmesh.isStopped = true;
+            m_animator.CrossFade(m_idleTag, m_transitionDuration);
+            m_currentTimer += Time.deltaTime;
+
+            if (m_currentTimer >= m_timerToWait)
+            {
+                Debug.Log("picking waypoint");
+                SetWaypoint();
+                m_currentTimer = 0;
+                m_animator.CrossFade(m_walkTag, m_transitionDuration);
+            }
+            
+        }
+
+        float distanceFromPlayer = Vector3.Distance(zombiePos, playerPos);
+        if (distanceFromPlayer <= m_distanceToChasePlayer)
+        {
+            zombieStateMachine.SwitchState(zombieStateMachine.m_ZombieChasingState);
+        }
+    }
+
+    public void SetWaypoint()
+    {
+        int waypoint = Random.Range(0, m_waypoints.Count);
+        m_currentWaypoint = m_waypoints[waypoint];
+        m_navmesh.isStopped = false;
+        m_navmesh.SetDestination(m_currentWaypoint.position);
+    }
+}
 
 [System.Serializable]
 public class StateZombieChasing : AbstractState
@@ -14,6 +92,8 @@ public class StateZombieChasing : AbstractState
     [Header("Components")]
     [SerializeField] NavMeshAgent m_navmeshAgent;
     Transform m_playerTransform;
+
+    [SerializeField] float m_distanceToChase;
 
     [Header("Animation Settings")]
     [SerializeField] Animator m_animator;
@@ -41,9 +121,21 @@ public class StateZombieChasing : AbstractState
             m_currentTimer = 0;
         }
 
+        Vector3 zombiePos = stateMachineController.transform.position;
+        zombiePos.y = 0;
+
+        Vector3 playerPos = PlayerManager.Instance.transform.position;
+        playerPos.y = 0;
+
+        float distanceFromPlayer = Vector3.Distance(zombiePos, playerPos);
+        if (distanceFromPlayer > m_distanceToChase)
+        {
+            zombieStateMachine.SwitchState(zombieStateMachine.m_ZombiePatrolState);
+        }
+
         if (!zombieStateMachine.PlayerInFront()) return;
 
-        zombieStateMachine.ForceSwitchState(zombieStateMachine.m_ZombieAttackState);
+        zombieStateMachine.SwitchState(zombieStateMachine.m_ZombieAttackState);
     }
 
     public override void ExitState(AbstractStateMachineController stateMachineController)

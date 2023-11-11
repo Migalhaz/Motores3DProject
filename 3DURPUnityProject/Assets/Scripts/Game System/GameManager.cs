@@ -14,7 +14,7 @@ namespace Game.GameSystem
         [SerializeField] GameObject m_deathCanvas;
 
         PlayerLifeSystem m_playerLifeSystem;
-        
+        public List<Transform> m_waypoints;
         public bool m_IsPaused => m_isPaused;
         protected override void Awake()
         {

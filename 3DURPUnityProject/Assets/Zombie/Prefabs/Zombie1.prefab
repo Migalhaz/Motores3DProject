@@ -1835,6 +1835,7 @@ MonoBehaviour:
     m_zombieSound: {fileID: 8300000, guid: 431cea3f48c0d3e4abdfee7b6876aa84, type: 3}
     m_timerToSound: 3
     m_navmeshAgent: {fileID: 1460152858}
+    m_distanceToChase: 75
     m_animator: {fileID: 7389507112651452681}
     m_animationTag: Z_Walk_InPlace
     m_transitionTime: 0.2
@@ -1858,6 +1859,15 @@ MonoBehaviour:
     m_transitionTime: 0.2
     m_navMeshAgent: {fileID: 1460152858}
     m_timeToDestroyObject: 2
+  m_zombiePatrolState:
+    m_canBeInterrupt: 1
+    m_animator: {fileID: 7389507112651452681}
+    m_idleTag: Z_Idle
+    m_walkTag: Z_Walk_InPlace
+    m_transitionDuration: 0.1
+    m_navmesh: {fileID: 1460152858}
+    m_timerToWait: 3
+    m_distanceToChasePlayer: 50
   m_raycastOffset: {x: 0, y: 1.25, z: 0}
   m_raycastDistance: 1
   m_playerLayerMask:
