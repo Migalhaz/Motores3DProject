@@ -1,3 +1,4 @@
+using Game.GameSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace Game.Player
 
         private void Update()
         {
+            if (GameManager.Instance.m_IsPaused) return;
+            if (!PlayerManager.Instance.m_PlayerLifeSystem.m_alive) return;
             MoveInput();
             AimInput();
             ReloadInput();

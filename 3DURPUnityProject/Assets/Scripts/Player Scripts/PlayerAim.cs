@@ -8,14 +8,15 @@ using UnityEngine.Events;
 namespace Game.Player
 {
     [RequireComponent(typeof(PlayerAnimatorController))]
-    [RequireComponent(typeof(PlayerInventory))]
     public class PlayerAim : MonoBehaviour
     {
         [Header("Components")]
         [SerializeField] PlayerAnimatorController m_playerAnimatorController;
-        [SerializeField] PlayerInventory m_inventory;
+        [SerializeField] LayerMask m_enemyLayerMask;
 
         [Header("Gun Settings")]
+        [SerializeField] Transform m_firePoint;
+        [SerializeField, Min(0)] float m_pistolDistance;
         [SerializeField, Range(0f, 1)] float m_fireRate;
 
         [SerializeField] UnityEvent m_aimingEvent;
@@ -39,7 +40,6 @@ namespace Game.Player
         private void Update()
         {
             m_fireRateTimer -= Time.deltaTime;
-
             if (m_aiming)
             {
                 m_aimingEvent?.Invoke();
@@ -65,6 +65,7 @@ namespace Game.Player
             m_playerAnimatorController.ShootAnim();
             m_fireRateTimer = Mathf.Abs(m_fireRate - 1);
             m_currentAmmo -= 1;
+            ShootHit();
             bool CanShoot()
             {
                 if (!m_aiming) return false;
@@ -76,17 +77,22 @@ namespace Game.Player
         public void Reload()
         {
             if (m_currentAmmo >= m_maxAmmo) return;
-            List<AbstractItem> itens = m_inventory.m_CurrentItens;
-            List<AbstractItem>  ammoBoxes = itens.FindAll(x => x is AmmoBox);
-            if (ammoBoxes.Count <= 0) return;
-
-            AmmoBox currentAmmoBox = (AmmoBox)ammoBoxes.First();
-            m_currentAmmo += currentAmmoBox.m_AmmoValue;
-            if (m_currentAmmo >= m_maxAmmo)
-            {
-                m_currentAmmo = m_maxAmmo;
-            }
-            m_inventory.RemoveItem(currentAmmoBox);
+            m_currentAmmo = m_maxAmmo;
         }
-    }
+        void OnDrawGizmos()
+        {
+            if (m_firePoint is null) return;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(m_firePoint.position, m_firePoint.forward * m_pistolDistance);
+        }
+
+        void ShootHit()
+        {
+            bool hit = Physics.Raycast(m_firePoint.position, m_firePoint.forward, out RaycastHit raycastHit, m_pistolDistance, m_enemyLayerMask);
+            if (hit)
+            {
+                raycastHit.transform.GetComponent<LifeSystem>().Damage(1);
+            }
+        }
+    }  
 }

@@ -12,13 +12,13 @@ public class Temp : MonoBehaviour
         PlayerAnimatorController playerAnimatorController = playerManager.m_PlayerAnimatorController;
         PlayerAim playerAim = playerManager.m_PlayerAim;
         PlayerInputs playerInputs = playerManager.m_PlayerInputs;
-        PlayerInventory playerInventory = playerManager.m_PlayerInventory;
+        //PlayerInventory playerInventory = playerManager.m_PlayerInventory;
         PlayerMove playerMove = playerManager.m_PlayerMove;
 
         Debug.Log(playerAnimatorController);
         Debug.Log(playerAim);
         Debug.Log(playerInputs);
-        Debug.Log(playerInventory);
+        //Debug.Log(playerInventory);
         Debug.Log(playerMove);
     }
 }

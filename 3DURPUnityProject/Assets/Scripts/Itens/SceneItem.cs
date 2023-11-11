@@ -21,7 +21,7 @@ namespace Game.Item
             Player.PlayerManager playerManager = Player.PlayerManager.Instance;
             eventAdd = false;
             m_playerInputs = playerManager.m_PlayerInputs;
-            m_playerInventory = playerManager.m_PlayerInventory;
+            //m_playerInventory = playerManager.m_PlayerInventory;
         }
 
         private void Update()

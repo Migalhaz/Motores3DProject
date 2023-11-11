@@ -10,9 +10,10 @@ namespace Game.Player
         [SerializeField] PlayerInputs m_playerInputs;
         [SerializeField] PlayerAnimatorController m_playerAnimatorController;
         [SerializeField] PlayerAim m_playerAim;
-        [SerializeField] PlayerInventory m_playerInventory;
+        [SerializeField] PlayerLifeSystem m_playerLifeSystem;
         [SerializeField] PlayerMove m_playerMove;
-
+        float m_coins;
+        [SerializeField] TMPro.TextMeshProUGUI m_textMeshPro;
         public PlayerInputs m_PlayerInputs 
         {
             get
@@ -46,15 +47,15 @@ namespace Game.Player
                 return m_playerAim;
             }
         }
-        public PlayerInventory m_PlayerInventory
+        public PlayerLifeSystem m_PlayerLifeSystem
         {
             get
             {
-                if (m_playerInventory is null)
+                if (m_playerLifeSystem is null)
                 {
-                    m_playerInventory = GetComponent<PlayerInventory>();
+                    m_playerLifeSystem = GetComponent<PlayerLifeSystem>();
                 }
-                return m_playerInventory;
+                return m_playerLifeSystem;
             }
         }
         public PlayerMove m_PlayerMove
@@ -67,6 +68,21 @@ namespace Game.Player
                 }
                 return m_playerMove;
             }
+        }
+
+        private void Start()
+        {
+            m_coins = 0;
+        }
+
+        private void Update()
+        {
+            m_textMeshPro.text = $"x{m_coins}";
+        }
+
+        public void AddCoin()
+        {
+            m_coins += 1;
         }
 
     }
