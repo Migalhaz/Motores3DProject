@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    [SerializeField] AudioClip m_coinClip;
     [SerializeField, Min(0)] float m_rotateSpeed;
     [SerializeField, Min(0)] float m_distanceToPick;
     Transform m_playerTransform;
@@ -34,6 +35,7 @@ public class Coin : MonoBehaviour
 
     void Pick()
     {
+        AudioSource.PlayClipAtPoint(m_coinClip, transform.position);
         PlayerManager.Instance.AddCoin();
         Destroy(gameObject);
     }

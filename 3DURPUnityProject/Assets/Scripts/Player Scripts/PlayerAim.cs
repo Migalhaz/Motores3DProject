@@ -1,3 +1,4 @@
+using Game.GameSystem;
 using Game.Item;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Game.Player
         [SerializeField] LayerMask m_enemyLayerMask;
 
         [Header("Gun Settings")]
+        [SerializeField] AudioClip m_gunClip;
         [SerializeField] Transform m_firePoint;
         [SerializeField, Min(0)] float m_pistolDistance;
         [SerializeField, Range(0f, 1)] float m_fireRate;
@@ -40,6 +42,10 @@ namespace Game.Player
         private void Update()
         {
             m_fireRateTimer -= Time.deltaTime;
+            if (GameManager.Instance.m_IsPaused)
+            {
+                m_aiming = false;
+            }
             if (m_aiming)
             {
                 m_aimingEvent?.Invoke();
@@ -62,6 +68,7 @@ namespace Game.Player
         public void Shoot()
         {
             if (!CanShoot()) return;
+            AudioSource.PlayClipAtPoint(m_gunClip, m_firePoint.position);
             m_playerAnimatorController.ShootAnim();
             m_fireRateTimer = Mathf.Abs(m_fireRate - 1);
             m_currentAmmo -= 1;

@@ -6,6 +6,11 @@ using UnityEngine.AI;
 [System.Serializable]
 public class StateZombieChasing : AbstractState
 {
+    [Header("Audio")]
+    [SerializeField] AudioClip m_zombieSound;
+    [SerializeField] float m_timerToSound;
+    float m_currentTimer;
+
     [Header("Components")]
     [SerializeField] NavMeshAgent m_navmeshAgent;
     Transform m_playerTransform;
@@ -18,7 +23,7 @@ public class StateZombieChasing : AbstractState
     public override void EnterState(AbstractStateMachineController stateMachineController)
     {
         base.EnterState(stateMachineController);
-
+        m_currentTimer = 0;
         m_animator.CrossFade(m_animationTag, m_transitionTime);
         m_playerTransform = PlayerManager.Instance.transform;
         m_navmeshAgent.isStopped = false;
@@ -29,6 +34,12 @@ public class StateZombieChasing : AbstractState
         base.UpdateState(stateMachineController);
         m_navmeshAgent.SetDestination(m_playerTransform.position);
         ZombieStateMachine zombieStateMachine = (ZombieStateMachine)stateMachineController;
+        m_currentTimer += Time.deltaTime;
+        if (m_currentTimer >= m_timerToSound)
+        {
+            AudioSource.PlayClipAtPoint(m_zombieSound, zombieStateMachine.transform.position);
+            m_currentTimer = 0;
+        }
 
         if (!zombieStateMachine.PlayerInFront()) return;
 
@@ -51,6 +62,7 @@ public class StateZombieAttack : AbstractState
     [SerializeField, Min(0)] float m_transitionTime;
 
     [Header("State Settings")]
+    [SerializeField] AudioClip m_attackSound;
     [SerializeField, Min(0)] float m_timerExitAttack;
     [SerializeField, Min(0)] float m_timerExecAttack;
     float m_currentTime;
@@ -64,7 +76,7 @@ public class StateZombieAttack : AbstractState
     public override void EnterState(AbstractStateMachineController stateMachineController)
     {
         base.EnterState(stateMachineController);
-
+        AudioSource.PlayClipAtPoint(m_attackSound, stateMachineController.transform.position);
         m_animator.CrossFade(m_animationTag, m_transitionTime);
         m_currentTime = 0;
         m_attacked = false;

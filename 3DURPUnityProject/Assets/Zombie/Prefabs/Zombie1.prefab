@@ -1832,6 +1832,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_zombieChasingState:
     m_canBeInterrupt: 1
+    m_zombieSound: {fileID: 8300000, guid: 431cea3f48c0d3e4abdfee7b6876aa84, type: 3}
+    m_timerToSound: 3
     m_navmeshAgent: {fileID: 1460152858}
     m_animator: {fileID: 7389507112651452681}
     m_animationTag: Z_Walk_InPlace
@@ -1841,8 +1843,9 @@ MonoBehaviour:
     m_animator: {fileID: 7389507112651452681}
     m_animationTag: Z_Attack
     m_transitionTime: 0.2
-    m_timerExitAttack: 2
-    m_timerExecAttack: 1
+    m_attackSound: {fileID: 8300000, guid: a78e361902799d2458542354de7cd157, type: 3}
+    m_timerExitAttack: 1
+    m_timerExecAttack: 0.5
     m_offset: {x: 0, y: 1.25, z: 0.5}
     m_size: 0.5
     m_playerLayerMask:
@@ -1873,7 +1876,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_startHealth: 2
+  m_collider: {fileID: 1460152857}
   m_zombieStateMachine: {fileID: 1460152859}
+  m_zombieSpawn: {fileID: 8300000, guid: 431cea3f48c0d3e4abdfee7b6876aa84, type: 3}
+  m_damageClip: {fileID: 8300000, guid: a1a16e53339323649bda1ffd11b1e236, type: 3}
+  m_deathClip: {fileID: 8300000, guid: ca5debc0465ac0040a2e99c7c8c511f8, type: 3}
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

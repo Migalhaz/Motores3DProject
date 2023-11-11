@@ -20,6 +20,9 @@ namespace Game.Player
         [SerializeField, Min(0)] float m_moveSpeed = 3f;
         Vector3 m_moveDirection;
 
+        [SerializeField] AudioSource m_moveSound;
+        [SerializeField] float m_timeToStep;
+        float m_currentTime;
         private void Update()
         {
             Move();
@@ -31,6 +34,17 @@ namespace Game.Player
             Vector3 moveResult = transform.TransformDirection(m_moveDirection).normalized;
             float moveSpeedResult = m_moveSpeed * Time.deltaTime;
             m_characterController.Move(moveSpeedResult * moveResult);
+            if (m_inputs.m_MoveInputs.magnitude <= 0.1f) return;
+
+            m_currentTime += Time.deltaTime;
+            if (m_currentTime >= m_timeToStep)
+            {
+                m_currentTime = 0;
+                m_moveSound.Play();
+            }
+
+
+
         }
     }
 }

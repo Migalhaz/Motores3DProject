@@ -13,7 +13,9 @@ namespace Game.Player
         [SerializeField] PlayerLifeSystem m_playerLifeSystem;
         [SerializeField] PlayerMove m_playerMove;
         float m_coins;
-        [SerializeField] TMPro.TextMeshProUGUI m_textMeshPro;
+        float m_zombie;
+        [SerializeField] TMPro.TextMeshProUGUI m_coinTextMeshPro;
+        [SerializeField] TMPro.TextMeshProUGUI m_zombieTextMeshPro;
         public PlayerInputs m_PlayerInputs 
         {
             get
@@ -77,12 +79,18 @@ namespace Game.Player
 
         private void Update()
         {
-            m_textMeshPro.text = $"x{m_coins}";
+            m_coinTextMeshPro.text = $"x{m_coins}";
+            m_zombieTextMeshPro.text = $"x{m_zombie}";
         }
 
         public void AddCoin()
         {
-            m_coins += 1;
+            m_coins++;
+        }
+
+        public void ZombieKilled()
+        {
+            m_zombie++;
         }
 
     }
